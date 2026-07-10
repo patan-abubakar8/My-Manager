@@ -94,7 +94,7 @@ export default function Dashboard() {
 
       <div className="dashboard-grid">
         <Link to="/projects" style={{ textDecoration: 'none' }}>
-          <div className="glass-panel glass-card stat-card">
+          <div className="glass-panel glass-card stat-card card-info">
             <div className="stat-icon primary">
               <span className="material-symbols-outlined">folder</span>
             </div>
@@ -106,7 +106,7 @@ export default function Dashboard() {
         </Link>
 
         <Link to="/projects" style={{ textDecoration: 'none' }}>
-          <div className="glass-panel glass-card stat-card">
+          <div className="glass-panel glass-card stat-card card-success">
             <div className="stat-icon success">
               <span className="material-symbols-outlined">rule</span>
             </div>
@@ -118,7 +118,7 @@ export default function Dashboard() {
         </Link>
 
         <Link to="/applications" style={{ textDecoration: 'none' }}>
-          <div className="glass-panel glass-card stat-card">
+          <div className="glass-panel glass-card stat-card card-warning">
             <div className="stat-icon warning">
               <span className="material-symbols-outlined">work</span>
             </div>
@@ -130,7 +130,7 @@ export default function Dashboard() {
         </Link>
 
         <Link to="/ideas" style={{ textDecoration: 'none' }}>
-          <div className="glass-panel glass-card stat-card">
+          <div className="glass-panel glass-card stat-card card-error">
             <div className="stat-icon danger">
               <span className="material-symbols-outlined">lightbulb</span>
             </div>

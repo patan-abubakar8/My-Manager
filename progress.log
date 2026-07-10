@@ -37,3 +37,9 @@
 - INFRASTRUCTURE: Built custom Promise-based ConfirmationModal framework.
 - COMPONENT: Exposed `(window as any).showConfirm()` globally to trigger asynchronous dialog modals.
 - REFACTOR: Replaced all browser native `confirm()` prompts with the custom `showConfirm()` overlay model across Applications.tsx, Ideas.tsx, Projects.tsx, and Settings.tsx.
+
+[2026-07-10T22:45:00+05:30]
+- REFACTOR: Upgraded index.css with a premium, modern Style System (integrated Plus Jakarta Sans font, 24px card border-radii, 9999px rounded pill buttons, and soft radial gradients).
+- REFACTOR: Created success, warning, info, and danger glow cards supporting customized ambient background glows.
+- COMPONENT: Updated Dashboard metric panels to apply info, success, warning, and danger ambient glows.
+- COMPONENT: Standardized cancel/delete actions inside ConfirmationModal to follow clean pill designs.

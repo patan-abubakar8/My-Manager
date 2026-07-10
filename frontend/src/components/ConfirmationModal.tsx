@@ -41,7 +41,7 @@ export default function ConfirmationModal({
               </button>
             )}
             {confirmText && (
-              <button className="btn btn-primary btn-danger" onClick={onConfirm}>
+              <button className="btn btn-danger" onClick={onConfirm}>
                 {confirmText}
               </button>
             )}
