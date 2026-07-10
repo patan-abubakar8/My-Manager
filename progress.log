@@ -47,3 +47,9 @@
 [2026-07-10T22:48:00+05:30]
 - REFACTOR: Overhauled sidebar navigation to feature a floating glassmorphic container with backdrop blurs.
 - REFACTOR: Redesigned active page menu items to use a vertical accent indicator bar, custom drop-shadow glows, and soft transparent backdrops.
+
+[2026-07-10T23:05:00+05:30]
+- DESIGN SYSTEM: Extracted and applied the organic claymorphic design system globally.
+- DESIGN SYSTEM: Set up body background gradients (mint-yellow in light mode; navy-dark in dark mode) and a bordered app-viewport frame.
+- REFACTOR: Simplified navigation sidebar to a fixed narrow vertical icon dock with circular pill highlights.
+- REFACTOR: Restructured Dashboard lists (active projects, jobs, ideas) to use double-nested tactile sub-card containers.

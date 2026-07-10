@@ -17,7 +17,6 @@ interface NavigationLayoutProps {
 }
 
 export default function NavigationLayout({ children, activeIdea, setActiveIdea }: NavigationLayoutProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [copilotOpen, setCopilotOpen] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
@@ -246,91 +245,72 @@ export default function NavigationLayout({ children, activeIdea, setActiveIdea }
   };
 
   return (
-    <div className="app-container">
+    <div className="app-viewport">
       {/* Sidebar Navigation */}
-      <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+      <aside className="sidebar">
         <div className="sidebar-header">
           <div className="brand-title">
             <span className="material-symbols-outlined logo-icon">cloud_sync</span>
-            {!sidebarCollapsed && <span>MyManager</span>}
           </div>
-          <button className="collapse-btn" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
-            <span className="material-symbols-outlined">
-              {sidebarCollapsed ? 'menu_open' : 'menu'}
-            </span>
-          </button>
         </div>
 
         <ul className="sidebar-menu">
-          <li className={`menu-item ${location.pathname === '/' ? 'active' : ''}`}>
+          <li className={`menu-item ${location.pathname === '/' ? 'active' : ''}`} title="Dashboard">
             <Link to="/">
               <span className="material-symbols-outlined">dashboard</span>
-              {!sidebarCollapsed && <span>Dashboard</span>}
             </Link>
           </li>
-          <li className={`menu-item ${location.pathname === '/projects' ? 'active' : ''}`}>
+          <li className={`menu-item ${location.pathname === '/projects' ? 'active' : ''}`} title="Projects">
             <Link to="/projects">
               <span className="material-symbols-outlined">folder</span>
-              {!sidebarCollapsed && <span>Projects</span>}
             </Link>
           </li>
-          <li className={`menu-item ${location.pathname === '/applications' ? 'active' : ''}`}>
+          <li className={`menu-item ${location.pathname === '/applications' ? 'active' : ''}`} title="Applications">
             <Link to="/applications">
               <span className="material-symbols-outlined">work</span>
-              {!sidebarCollapsed && <span>Applications</span>}
             </Link>
           </li>
-          <li className={`menu-item ${location.pathname === '/resumes' ? 'active' : ''}`}>
+          <li className={`menu-item ${location.pathname === '/resumes' ? 'active' : ''}`} title="Resume Studio">
             <Link to="/resumes">
               <span className="material-symbols-outlined">description</span>
-              {!sidebarCollapsed && <span>Resume Studio</span>}
             </Link>
           </li>
-          <li className={`menu-item ${location.pathname === '/ideas' ? 'active' : ''}`}>
+          <li className={`menu-item ${location.pathname === '/ideas' ? 'active' : ''}`} title="Ideas Board">
             <Link to="/ideas">
               <span className="material-symbols-outlined">lightbulb</span>
-              {!sidebarCollapsed && <span>Ideas Board</span>}
             </Link>
           </li>
-          <li className={`menu-item ${location.pathname === '/social' ? 'active' : ''}`}>
+          <li className={`menu-item ${location.pathname === '/social' ? 'active' : ''}`} title="Social Hub">
             <Link to="/social">
               <span className="material-symbols-outlined">hub</span>
-              {!sidebarCollapsed && <span>Social Hub</span>}
             </Link>
-          </li>
-          <li className={`menu-item ${location.pathname === '/settings' ? 'active' : ''}`}>
-            <Link to="/settings">
-              <span className="material-symbols-outlined">settings</span>
-              {!sidebarCollapsed && <span>Settings</span>}
-            </Link>
-          </li>
-          <li className="menu-item" style={{ marginTop: '14px', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '8px' }}>
-            <button 
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '8px 12px',
-                color: 'var(--text-secondary)',
-                background: 'transparent',
-                border: 'none',
-                width: '100%',
-                textAlign: 'left',
-                cursor: 'pointer',
-                borderRadius: '8px',
-                transition: 'all 0.2s ease',
-              }}
-              onMouseOver={(e) => e.currentTarget.style.background = 'var(--accent-dim)'}
-              onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-            >
-              <span className="material-symbols-outlined">
-                {theme === 'dark' ? 'dark_mode' : 'light_mode'}
-              </span>
-              {!sidebarCollapsed && <span>{theme === 'dark' ? 'Dark Theme' : 'Light Theme'}</span>}
-            </button>
           </li>
         </ul>
+
+        <div className="sidebar-bottom">
+          <button 
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+          >
+            <span className="material-symbols-outlined">
+              {theme === 'dark' ? 'dark_mode' : 'light_mode'}
+            </span>
+          </button>
+          
+          <Link to="/settings" style={{
+            width: '44px',
+            height: '44px',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: location.pathname === '/settings' ? 'var(--sidebar-active-color)' : 'var(--text-secondary)',
+            background: location.pathname === '/settings' ? 'var(--sidebar-active-bg)' : 'transparent',
+            textDecoration: 'none'
+          }} title="Settings">
+            <span className="material-symbols-outlined">settings</span>
+          </Link>
+        </div>
       </aside>
 
       {/* Main Page Area */}
