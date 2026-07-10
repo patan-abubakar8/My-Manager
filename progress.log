@@ -31,3 +31,4 @@
 - REFACTOR: Re-arranged frontend into modular directory pattern (`frontend/src/` containing `styles/`, `layouts/`, `components/`).
 - REFACTOR: Decoupled ToastNotification and NavigationLayout from App.tsx into single responsibility files.
 - DOCUMENTATION: Updated MyManager workspace directory structure block in README.md.
+- INFRASTRUCTURE: Initialized git repository, added root `.gitignore`, staged and committed core project files, and successfully pushed the codebase (`main` branch) to the remote GitHub repository at `https://github.com/patan-abubakar8/My-Manager.git`.
