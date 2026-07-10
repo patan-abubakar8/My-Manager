@@ -109,13 +109,10 @@ body.light-theme {
 }
 
 body {
-  background: var(--bg-gradient);
-  background-attachment: fixed;
+  background-color: var(--viewport-bg);
   overflow: hidden;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: var(--text-primary);
 }
 
 /* Scrollbars */
@@ -147,27 +144,14 @@ h1, h2, h3, h4, h5, h6, strong, th, b {
    3. APP VIEWPORT FRAME & NARROW SIDEBAR
    ========================================================================== */
 
-/* Centered Desktop Frame Viewport */
+/* Full Screen Viewport */
 .app-viewport {
-  width: calc(100vw - 32px);
-  height: calc(100vh - 32px);
-  max-width: 1440px;
-  max-height: 900px;
+  width: 100vw;
+  height: 100vh;
   background: var(--viewport-bg);
-  border: 3px solid var(--viewport-border);
-  border-radius: var(--viewport-radius);
-  box-shadow: var(--shadow-lg);
   display: flex;
   overflow: hidden;
   position: relative;
-}
-@media (max-width: 768px) {
-  .app-viewport {
-    width: 100vw;
-    height: 100vh;
-    border-radius: 0;
-    border: none;
-  }
 }
 
 /* Floating/Integrated Compact Sidebar */
