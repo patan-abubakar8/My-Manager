@@ -479,7 +479,7 @@ export default function ResumeCreator() {
           </div>
 
           {/* Sub-tabs Selector for Step 1 */}
-          <div style={{ display: 'flex', gap: '10px', background: 'rgba(0,0,0,0.05)', padding: '6px', borderRadius: '8px', border: '1px solid var(--border-color)', alignSelf: 'flex-start' }}>
+          <div className="capsule-tabs" style={{ alignSelf: 'flex-start' }}>
             {[
               { id: 'upload', label: 'Upload PDF', icon: 'upload_file' },
               { id: 'paste', label: 'Paste Text', icon: 'content_paste' },
@@ -488,8 +488,8 @@ export default function ResumeCreator() {
               <button
                 key={tab.id}
                 type="button"
-                className={`btn ${profileMode === tab.id ? 'btn-primary' : 'btn-secondary'}`}
-                style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                className={`capsule-tab-item ${profileMode === tab.id ? 'active' : ''}`}
+                style={{ padding: '8px 16px', fontSize: '0.82rem', gap: '6px' }}
                 onClick={() => setProfileMode(tab.id as 'upload' | 'paste' | 'form')}
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>{tab.icon}</span>

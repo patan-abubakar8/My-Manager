@@ -145,12 +145,21 @@ export default function Ideas({ onDeepDive }: IdeasProps) {
                     fontSize: '0.75rem',
                     background: idea.category === 'Tech' ? 'var(--accent-dim)' : idea.category === 'Business' ? 'var(--warning-bg)' : 'var(--success-bg)',
                     color: idea.category === 'Tech' ? 'var(--accent-hover)' : idea.category === 'Business' ? 'var(--warning-color)' : 'var(--success-color)',
-                    padding: '2px 8px',
-                    borderRadius: '20px'
+                    padding: '4px 12px',
+                    borderRadius: '9999px',
+                    fontWeight: 600
                   }}>
                     {idea.category}
                   </span>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <span style={{
+                    fontSize: '0.75rem',
+                    background: 'var(--sub-card-bg)',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--text-secondary)',
+                    padding: '4px 12px',
+                    borderRadius: '9999px',
+                    fontWeight: 600
+                  }}>
                     {idea.status}
                   </span>
                 </div>

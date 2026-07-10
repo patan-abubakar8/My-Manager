@@ -160,9 +160,13 @@ export default function Dashboard() {
                       <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>{p.description}</div>
                     </div>
                     {p.tech_stack && (
-                      <span style={{ fontSize: '0.8rem', background: 'var(--panel-bg)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', padding: '4px 12px', borderRadius: '9999px', fontWeight: 600 }}>
-                        {p.tech_stack}
-                      </span>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                        {p.tech_stack.split(',').map((t, idx) => (
+                          <span key={idx} style={{ fontSize: '0.75rem', background: 'var(--panel-bg)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', padding: '3px 10px', borderRadius: '9999px', fontWeight: 600 }}>
+                            {t.trim()}
+                          </span>
+                        ))}
+                      </div>
                     )}
                   </div>
                 ))}

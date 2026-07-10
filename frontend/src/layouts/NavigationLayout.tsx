@@ -465,24 +465,28 @@ export default function NavigationLayout({ children, activeIdea, setActiveIdea }
 
         </div>
 
-        {/* Model Mode Selector (Radio buttons) */}
-        <div style={{ display: 'flex', gap: '12px', padding: '8px 16px', borderTop: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.02)', flexWrap: 'wrap' }}>
-          {[
-            { id: 'text', label: 'Text', model: activeTextModel },
-            { id: 'image', label: 'Image', model: activeImageModel },
-            { id: 'video', label: 'Video', model: activeVideoModel }
-          ].map(mode => (
-            <label key={mode.id} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: 'var(--text-secondary)', cursor: 'pointer', userSelect: 'none' }}>
-              <input
-                type="radio"
-                name="chat_mode"
-                checked={chatMode === mode.id}
-                onChange={() => setChatMode(mode.id as 'text' | 'image' | 'video')}
-                style={{ accentColor: 'var(--accent-color)' }}
-              />
-              <span><strong>{mode.label}</strong> ({mode.model.split('/').pop()})</span>
-            </label>
-          ))}
+        {/* Model Mode Selector (Pill tabs) */}
+        <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border-color)', background: 'var(--sub-card-bg)' }}>
+          <div className="capsule-tabs" style={{ width: '100%', display: 'flex' }}>
+            {[
+              { id: 'text', label: 'Text', model: activeTextModel },
+              { id: 'image', label: 'Image', model: activeImageModel },
+              { id: 'video', label: 'Video', model: activeVideoModel }
+            ].map(mode => (
+              <button
+                key={mode.id}
+                type="button"
+                className={`capsule-tab-item ${chatMode === mode.id ? 'active' : ''}`}
+                style={{ flex: 1, justifyContent: 'center', fontSize: '0.8rem', padding: '6px 8px' }}
+                onClick={() => setChatMode(mode.id as 'text' | 'image' | 'video')}
+              >
+                <strong>{mode.label}</strong>
+                <span className="tab-badge" style={{ fontSize: '0.65rem' }}>
+                  {mode.model.split('/').pop()?.split('-')[0] || mode.model.split('/').pop()}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Input Bar */}

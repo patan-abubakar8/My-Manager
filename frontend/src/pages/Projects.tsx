@@ -441,24 +441,27 @@ export default function Projects() {
           {selectedProject && (
             <div className="split-main">
               <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '20px', marginBottom: '20px' }}>
                   <div>
-                    <h2 style={{ fontSize: '1.3rem', color: 'var(--text-primary)' }}>{selectedProject.name}</h2>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '6px' }}>{selectedProject.description}</p>
+                    <h2 style={{ fontSize: '1.4rem', color: 'var(--text-primary)', fontWeight: 700 }}>{selectedProject.name}</h2>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', marginTop: '6px' }}>{selectedProject.description}</p>
                     {selectedProject.tech_stack && (
-                      <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Tech Stack:</span>
-                        <span style={{ fontSize: '0.8rem', background: 'var(--accent-dim)', color: 'var(--accent-hover)', padding: '2px 8px', borderRadius: '4px' }}>{selectedProject.tech_stack}</span>
+                      <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                        {selectedProject.tech_stack.split(',').map((t, idx) => (
+                          <span key={idx} style={{ fontSize: '0.78rem', background: 'var(--sub-card-bg)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', padding: '4px 12px', borderRadius: '9999px', fontWeight: 600 }}>
+                            {t.trim()}
+                          </span>
+                        ))}
                       </div>
                     )}
                   </div>
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <button className="btn btn-secondary" onClick={handleGenerateTasks} disabled={generatingTasks}>
-                      <span className="material-symbols-outlined">auto_awesome</span> 
+                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>auto_awesome</span> 
                       {generatingTasks ? 'Generating...' : 'AI Generate Tasks'}
                     </button>
                     <button className="btn btn-primary" onClick={openCreateTaskModal}>
-                      <span className="material-symbols-outlined">add_task</span> Add Task
+                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add_task</span> Add Task
                     </button>
                   </div>
                 </div>
@@ -554,20 +557,22 @@ export default function Projects() {
                         <span
                           key={i}
                           style={{
-                            fontSize: '0.85rem',
-                            background: 'rgba(255,255,255,0.05)',
+                            fontSize: '0.82rem',
+                            background: 'var(--sub-card-bg)',
                             border: '1px solid var(--border-color)',
-                            borderRadius: '20px',
-                            padding: '4px 12px',
+                            borderRadius: '9999px',
+                            padding: '6px 14px',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '6px'
+                            gap: '8px',
+                            fontWeight: 600,
+                            color: 'var(--text-secondary)'
                           }}
                         >
                           {f}
                           <span
                             className="material-symbols-outlined"
-                            style={{ fontSize: '14px', cursor: 'pointer', color: 'var(--text-muted)' }}
+                            style={{ fontSize: '14px', cursor: 'pointer', color: 'var(--danger-color)' }}
                             onClick={() => handleRemoveFeature(i)}
                           >
                             close
@@ -585,7 +590,7 @@ export default function Projects() {
                 <div className="kanban-col">
                   <div className="kanban-col-header">
                     <span>To Do</span>
-                    <span style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>
+                    <span className="tab-badge">
                       {tasks.filter(t => t.status === 'TODO').length}
                     </span>
                   </div>
@@ -616,7 +621,7 @@ export default function Projects() {
                 <div className="kanban-col">
                   <div className="kanban-col-header">
                     <span>In Progress</span>
-                    <span style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>
+                    <span className="tab-badge">
                       {tasks.filter(t => t.status === 'IN_PROGRESS').length}
                     </span>
                   </div>
@@ -650,7 +655,7 @@ export default function Projects() {
                 <div className="kanban-col">
                   <div className="kanban-col-header">
                     <span>Completed</span>
-                    <span style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>
+                    <span className="tab-badge">
                       {tasks.filter(t => t.status === 'DONE').length}
                     </span>
                   </div>

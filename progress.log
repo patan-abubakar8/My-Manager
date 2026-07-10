@@ -62,3 +62,6 @@
 
 [2026-07-10T23:20:00+05:30]
 - FIX: Completely resolved viewport horizontal shifting issue. Replaced browser native `scrollIntoView()` inside the Copilot chat drawer with container-level `scrollTop` assignments and added a route-change hook that locks the viewport's horizontal scroll offset back to zero.
+
+[2026-07-10T23:45:00+05:30]
+- UI/UX: Executed global layout and aesthetic polish. Centered sidebar menu icons by resetting default browser ul padding-left. Overhauled raw radio-button selector in Copilot with premium capsule tabs. Styled Kanban columns priority tags and circle counts. Split text stack strings into individual rounded capsule tags on Dashboard and Project pages. Standardized sub-tabs in Resume Creator and Job Application tracker.

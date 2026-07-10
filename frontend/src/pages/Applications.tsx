@@ -277,20 +277,11 @@ export default function Applications() {
       </div>
 
       {/* Tabs Header Navigation */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', marginBottom: '24px' }}>
+      <div className="capsule-tabs" style={{ marginBottom: '24px', maxWidth: '360px' }}>
         <button
           onClick={() => setActiveTab('tracker')}
-          style={{
-            background: 'none',
-            border: 'none',
-            borderBottom: activeTab === 'tracker' ? '2px solid var(--accent-color)' : 'none',
-            color: activeTab === 'tracker' ? 'var(--text-primary)' : 'var(--text-secondary)',
-            padding: '12px 24px',
-            fontSize: '0.95rem',
-            fontWeight: activeTab === 'tracker' ? '600' : '500',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease'
-          }}
+          className={`capsule-tab-item ${activeTab === 'tracker' ? 'active' : ''}`}
+          style={{ flex: 1, justifyContent: 'center' }}
         >
           My Tracker
         </button>
@@ -303,20 +294,8 @@ export default function Applications() {
               setSelectedJob(searchResults[0]);
             }
           }}
-          style={{
-            background: 'none',
-            border: 'none',
-            borderBottom: activeTab === 'discover' ? '2px solid var(--accent-color)' : 'none',
-            color: activeTab === 'discover' ? 'var(--text-primary)' : 'var(--text-secondary)',
-            padding: '12px 24px',
-            fontSize: '0.95rem',
-            fontWeight: activeTab === 'discover' ? '600' : '500',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            transition: 'all 0.2s ease'
-          }}
+          className={`capsule-tab-item ${activeTab === 'discover' ? 'active' : ''}`}
+          style={{ flex: 1, justifyContent: 'center', gap: '6px' }}
         >
           <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>explore</span>
           Discover Tech Jobs
