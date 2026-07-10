@@ -281,10 +281,12 @@ input:focus, select:focus, textarea:focus {
   position: relative;
 }
 
-/* Sidebar styling (dark, compact focus) */
+/* Sidebar styling (floating glassmorphic sidebar) */
 .sidebar {
   width: 250px;
-  background: #060809;
+  background: rgba(10, 14, 18, 0.6);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
@@ -294,54 +296,89 @@ input:focus, select:focus, textarea:focus {
   z-index: 100;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+body.light-theme .sidebar {
+  background: rgba(255, 255, 255, 0.7);
+}
+
 .sidebar.collapsed {
   width: 70px;
 }
+
 .sidebar-header {
-  padding: 20px;
+  padding: 24px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--border-color);
 }
+
 .brand-title {
-  font-size: 1rem;
-  color: #ffffff;
+  font-size: 1.05rem;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 10px;
+  font-weight: 600;
 }
 .brand-title span.logo-icon {
   color: var(--accent-color);
+  filter: drop-shadow(0 0 6px var(--accent-color));
 }
 
 .sidebar-menu {
   list-style: none;
-  padding: 12px 8px;
+  padding: 16px 8px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
+
+.menu-item {
+  position: relative;
+}
+
 .menu-item a {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 14px;
+  padding: 11px 16px;
   color: var(--text-secondary);
   text-decoration: none;
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  border-radius: 14px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
 }
+
 .menu-item a:hover {
-  color: #ffffff;
+  color: var(--text-primary);
   background: rgba(255, 255, 255, 0.04);
 }
-.menu-item.active a {
-  color: #000000 !important;
-  background: var(--accent-color) !important;
+body.light-theme .menu-item a:hover {
+  background: rgba(0, 0, 0, 0.02);
 }
-.menu-item.active a span {
-  color: #000000 !important;
+
+/* Vertical active navigation bar & glow */
+.menu-item.active::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  background: var(--accent-color);
+  border-radius: 99px;
+  box-shadow: 0 0 10px var(--accent-color);
+  z-index: 10;
+}
+
+.menu-item.active a {
+  color: var(--text-primary) !important;
+  background: var(--accent-dim) !important;
+}
+
+.menu-item.active a span.material-symbols-outlined {
+  color: var(--accent-color) !important;
+  filter: drop-shadow(0 0 4px var(--accent-color));
 }
 
 /* Main Content Area */

@@ -43,3 +43,7 @@
 - REFACTOR: Created success, warning, info, and danger glow cards supporting customized ambient background glows.
 - COMPONENT: Updated Dashboard metric panels to apply info, success, warning, and danger ambient glows.
 - COMPONENT: Standardized cancel/delete actions inside ConfirmationModal to follow clean pill designs.
+
+[2026-07-10T22:48:00+05:30]
+- REFACTOR: Overhauled sidebar navigation to feature a floating glassmorphic container with backdrop blurs.
+- REFACTOR: Redesigned active page menu items to use a vertical accent indicator bar, custom drop-shadow glows, and soft transparent backdrops.
