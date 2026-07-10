@@ -64,7 +64,15 @@ export default function NavigationLayout({ children, activeIdea, setActiveIdea }
   }, [theme]);
 
   const location = useLocation();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+
+  // Force viewport scroll position to stay locked to the left on route changes
+  useEffect(() => {
+    if (viewportRef.current) {
+      viewportRef.current.scrollLeft = 0;
+    }
+  }, [location.pathname]);
 
   // Determine current page for context
   const getPageContext = () => {
@@ -91,11 +99,15 @@ export default function NavigationLayout({ children, activeIdea, setActiveIdea }
   }, [activeIdea]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [chatHistory, streamingContent]);
+    if (copilotOpen) {
+      scrollToBottom();
+    }
+  }, [chatHistory, streamingContent, copilotOpen]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -245,7 +257,7 @@ export default function NavigationLayout({ children, activeIdea, setActiveIdea }
   };
 
   return (
-    <div className="app-viewport">
+    <div className="app-viewport" ref={viewportRef}>
       {/* Sidebar Navigation */}
       <aside className="sidebar">
         <div className="sidebar-header">
@@ -348,7 +360,7 @@ export default function NavigationLayout({ children, activeIdea, setActiveIdea }
         )}
 
         {/* Chat History Messages */}
-        <div className="copilot-messages">
+        <div className="copilot-messages" ref={chatContainerRef}>
           {chatHistory.length === 0 && (
             <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '36px', color: 'var(--accent-color)', marginBottom: '10px' }}>psychology</span>
@@ -451,7 +463,6 @@ export default function NavigationLayout({ children, activeIdea, setActiveIdea }
             </div>
           )}
 
-          <div ref={messagesEndRef} />
         </div>
 
         {/* Model Mode Selector (Radio buttons) */}

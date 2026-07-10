@@ -59,3 +59,6 @@
 
 [2026-07-10T23:15:00+05:30]
 - DESIGN SYSTEM: Refactored container wrappers to a professional full-screen layout. Removed the mock desktop floating margins, outer borders, and gradient margins, stretching the workspace to occupy 100% of the browser canvas width and height.
+
+[2026-07-10T23:20:00+05:30]
+- FIX: Completely resolved viewport horizontal shifting issue. Replaced browser native `scrollIntoView()` inside the Copilot chat drawer with container-level `scrollTop` assignments and added a route-change hook that locks the viewport's horizontal scroll offset back to zero.
