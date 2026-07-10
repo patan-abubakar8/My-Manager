@@ -690,7 +690,7 @@ body.light-theme .data-table th {
 .copilot-panel {
   position: absolute; /* Relative to the app viewport */
   top: 0;
-  right: -420px;
+  right: 0;
   width: 400px;
   height: 100%;
   background: var(--panel-bg);
@@ -699,10 +699,13 @@ body.light-theme .data-table th {
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
 }
 .copilot-panel.open {
-  right: 0;
+  transform: translateX(0);
+  visibility: visible;
 }
 .copilot-toggle {
   position: absolute;

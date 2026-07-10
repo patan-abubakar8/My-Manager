@@ -53,3 +53,6 @@
 - DESIGN SYSTEM: Set up body background gradients (mint-yellow in light mode; navy-dark in dark mode) and a bordered app-viewport frame.
 - REFACTOR: Simplified navigation sidebar to a fixed narrow vertical icon dock with circular pill highlights.
 - REFACTOR: Restructured Dashboard lists (active projects, jobs, ideas) to use double-nested tactile sub-card containers.
+
+[2026-07-10T23:10:00+05:30]
+- FIX: Resolved viewport horizontal shifting/clipping issue by moving the off-screen Copilot drawer to a CSS `transform: translateX(100%)` animation combined with a dynamic `visibility` toggle. This prevents the browser from programmatically scrolling the parent frame on drawer input focus.
