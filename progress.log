@@ -1,0 +1,33 @@
+[2026-07-09T10:00:00+05:30]
+- SCRATCH BUILD: Designed and created the MyManager application codebase.
+  - Setup Python FastAPI backend configuration with CORS, routing, and uvicorn setup.
+  - Setup SQLAlchemy ORM models (UserMemory, JobApplication, Project, Task, MasterProfile, TailoredResume, SystemSetting, Idea) with audit creation and update fields.
+  - Configured PostgreSQL database connection and startup table check utilities.
+  - Created React 19 + TypeScript + Vite frontend project with collapsible sidebar navigation and absolute global routing.
+  - Configured dark-forest styling variables with glassmorphism and animated layouts inside the CSS design system.
+  - Built Dashboard page tracking total jobs, active projects, tasks, and categorized ideas.
+  - Developed Kanban board displaying Tasks grouped under individual Project views with todo/in_progress/done states, priorities, and deadlines.
+  - Created Job Tracker board managing descriptions, HR contacts, salaries, URLs, and status streams.
+  - Engineered Resume Studio supporting master parsing, AI-based experience tailoring, automated cover letter formatting, and ATS match scoring.
+  - Programmed Ideas Manager with deep-dive focusing hooks.
+  - Developed AI Copilot utilizing NVIDIA NIM APIs to support Server-Sent Events (SSE) streaming responses, background memory facts compiler, and confirmation cards for AI actions.
+  - Added Settings panel to toggle text/image/video models and review database memory facts.
+  - Created run_app.bat startup shell launcher for Windows environment.
+
+[2026-07-10T21:30:00+05:30]
+- FEATURE ADDITION: Added database columns `is_own_project` and `recreate_steps` to Project model in backend.
+- FEATURE ADDITION: Added backend API route `POST /api/v1/projects/import-github` with support for Own Project (resume-ready summary generation) and Others Project (step-by-step recreation guide generation).
+- FEATURE ADDITION: Modified Projects page header to add "Import My Project" and "Import Others Project" actions.
+- FEATURE ADDITION: Added GitHub import modal and conditional workspace layouts to render recreation guides for reference/learning projects.
+
+[2026-07-10T21:49:00+05:30]
+- INFRASTRUCTURE: Built custom Toast notification framework with top-center glassmorphic animations.
+- COMPONENT: Exposed `(window as any).showToast()` globally from root App.tsx.
+- REFACTOR: Replaced all native window `alert()` calls with the custom `showToast()` helper in App.tsx, Settings.tsx, ResumeCreator.tsx, and Projects.tsx.
+
+[2026-07-10T21:55:00+05:30]
+- REFACTOR: Restructured backend_py into Clean Architecture pattern (`backend_py/src/` containing modular `api`, `application`, `domain`, `infrastructure`, `config`, `tests`, `shared` directories).
+- REFACTOR: Updated uvicorn server startup imports in server.py and database initialization in run_app.bat.
+- REFACTOR: Re-arranged frontend into modular directory pattern (`frontend/src/` containing `styles/`, `layouts/`, `components/`).
+- REFACTOR: Decoupled ToastNotification and NavigationLayout from App.tsx into single responsibility files.
+- DOCUMENTATION: Updated MyManager workspace directory structure block in README.md.

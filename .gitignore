@@ -1,0 +1,18 @@
+# Python virtual env and build cache
+backend_py/.venv/
+backend_py/**/__pycache__/
+backend_py/**/*.pyc
+
+# Frontend dependencies and production builds
+frontend/node_modules/
+frontend/dist/
+
+# System specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE/Agent temporary directories
+.agents/
+.memory/
+Brain/
