@@ -84,7 +84,13 @@ export default function Ideas({ onDeepDive }: IdeasProps) {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm('Are you sure you want to delete this idea?')) return;
+    const confirmed = await (window as any).showConfirm(
+      'Delete Idea',
+      'Are you sure you want to delete this idea?',
+      'Delete',
+      'Cancel'
+    );
+    if (!confirmed) return;
     try {
       const res = await fetch(`/api/v1/ideas/${id}`, { method: 'DELETE' });
       if (res.ok) {

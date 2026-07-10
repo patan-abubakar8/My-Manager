@@ -197,7 +197,13 @@ export default function Applications() {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm('Are you sure you want to delete this job application?')) return;
+    const confirmed = await (window as any).showConfirm(
+      'Delete Application',
+      'Are you sure you want to delete this job application?',
+      'Delete',
+      'Cancel'
+    );
+    if (!confirmed) return;
     try {
       const res = await fetch(`/api/v1/jobs/${id}`, { method: 'DELETE' });
       if (res.ok) {

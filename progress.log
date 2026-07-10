@@ -32,3 +32,8 @@
 - REFACTOR: Decoupled ToastNotification and NavigationLayout from App.tsx into single responsibility files.
 - DOCUMENTATION: Updated MyManager workspace directory structure block in README.md.
 - INFRASTRUCTURE: Initialized git repository, added root `.gitignore`, staged and committed core project files, and successfully pushed the codebase (`main` branch) to the remote GitHub repository at `https://github.com/patan-abubakar8/My-Manager.git`.
+
+[2026-07-10T22:30:00+05:30]
+- INFRASTRUCTURE: Built custom Promise-based ConfirmationModal framework.
+- COMPONENT: Exposed `(window as any).showConfirm()` globally to trigger asynchronous dialog modals.
+- REFACTOR: Replaced all browser native `confirm()` prompts with the custom `showConfirm()` overlay model across Applications.tsx, Ideas.tsx, Projects.tsx, and Settings.tsx.

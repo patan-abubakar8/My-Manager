@@ -169,7 +169,13 @@ export default function Projects() {
   }
 
   async function handleDeleteProject(id: number) {
-    if (!confirm('Are you sure you want to delete this project and all its tasks?')) return;
+    const confirmed = await (window as any).showConfirm(
+      'Delete Project',
+      'Are you sure you want to delete this project and all its tasks?',
+      'Delete',
+      'Cancel'
+    );
+    if (!confirmed) return;
     try {
       const res = await fetch(`/api/v1/projects/${id}`, { method: 'DELETE' });
       if (res.ok) {
@@ -272,7 +278,13 @@ export default function Projects() {
   }
 
   async function handleDeleteTask(taskId: number) {
-    if (!confirm('Delete this task?')) return;
+    const confirmed = await (window as any).showConfirm(
+      'Delete Task',
+      'Are you sure you want to delete this task?',
+      'Delete',
+      'Cancel'
+    );
+    if (!confirmed) return;
     try {
       const res = await fetch(`/api/v1/tasks/${taskId}`, { method: 'DELETE' });
       if (res.ok) {

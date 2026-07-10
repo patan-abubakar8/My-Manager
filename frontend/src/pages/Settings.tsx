@@ -183,7 +183,13 @@ export default function Settings() {
   }
 
   async function handleDeleteMemory(id: number) {
-    if (!confirm('Are you sure you want to delete this memory fact? The AI will forget this.')) return;
+    const confirmed = await (window as any).showConfirm(
+      'Delete Memory',
+      'Are you sure you want to delete this memory fact? The AI will forget this.',
+      'Delete',
+      'Cancel'
+    );
+    if (!confirmed) return;
     try {
       const res = await fetch(`/api/v1/ai/memories/${id}`, { method: 'DELETE' });
       if (res.ok) {
