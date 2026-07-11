@@ -97,6 +97,45 @@ export default function ResumeCreator() {
   // Templates states
   const [selectedTemplate, setSelectedTemplate] = useState<'modern' | 'tech' | 'executive'>('modern');
 
+  // Layout Styling parameters with ultra-compact defaults
+  const [customPadding, setCustomPadding] = useState<string>('0.4in');
+  const [customFontSize, setCustomFontSize] = useState<string>('9pt');
+  const [customLineHeight, setCustomLineHeight] = useState<string>('1.2');
+  const [customSectionSpacing, setCustomSectionSpacing] = useState<string>('6px');
+  const [customHeaderStyle, setCustomHeaderStyle] = useState<'underline' | 'bordered' | 'minimal'>('underline');
+  const [customPrimaryColor, setCustomPrimaryColor] = useState<string>('#1e3a8a');
+  const [customFontFamily, setCustomFontFamily] = useState<'sans-serif' | 'serif' | 'monospace'>('sans-serif');
+  const [customCssOverrides, setCustomCssOverrides] = useState<string>('');
+
+  const applyTemplatePreset = (tplId: 'modern' | 'tech' | 'executive') => {
+    setSelectedTemplate(tplId);
+    if (tplId === 'modern') {
+      setCustomPadding('0.4in');
+      setCustomFontSize('9pt');
+      setCustomLineHeight('1.25');
+      setCustomSectionSpacing('6px');
+      setCustomHeaderStyle('underline');
+      setCustomPrimaryColor('#1e3a8a');
+      setCustomFontFamily('sans-serif');
+    } else if (tplId === 'tech') {
+      setCustomPadding('0.4in');
+      setCustomFontSize('8.5pt');
+      setCustomLineHeight('1.2');
+      setCustomSectionSpacing('5px');
+      setCustomHeaderStyle('minimal');
+      setCustomPrimaryColor('#0f172a');
+      setCustomFontFamily('monospace');
+    } else if (tplId === 'executive') {
+      setCustomPadding('0.6in');
+      setCustomFontSize('10pt');
+      setCustomLineHeight('1.3');
+      setCustomSectionSpacing('8px');
+      setCustomHeaderStyle('bordered');
+      setCustomPrimaryColor('#111827');
+      setCustomFontFamily('serif');
+    }
+  };
+
   // Interview Coach states
   const [coachReport, setCoachReport] = useState<CoachReport | null>(null);
   const [loadingCoach, setLoadingCoach] = useState(false);
@@ -605,7 +644,16 @@ export default function ResumeCreator() {
           experience: tailoredExperience.length > 0 ? tailoredExperience : experience,
           education,
           skills,
-          projects: projectsList
+          projects: projectsList,
+          style_config: {
+            padding: customPadding,
+            fontSize: customFontSize,
+            lineHeight: customLineHeight,
+            sectionSpacing: customSectionSpacing,
+            headerStyle: customHeaderStyle,
+            primaryColor: customPrimaryColor,
+            fontFamily: customFontFamily
+          }
         })
       });
       if (response.ok) {
@@ -1490,9 +1538,9 @@ export default function ResumeCreator() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '20px', alignItems: 'start' }}>
-            {/* Left: Template Selector */}
-            <div className="glass-panel" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '20px', alignItems: 'start' }}>
+            {/* Left: Template Selector & Style Customizer */}
+            <div className="glass-panel" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '14px', maxHeight: '80vh', overflowY: 'auto' }}>
               <h4 style={{ fontSize: '0.88rem', fontWeight: 700, margin: '0 0 4px 0' }}>Available Templates</h4>
               {[
                 { id: 'modern', name: 'Modern Minimalist', desc: 'Sleek sans-serif, single column clean structure.' },
@@ -1501,9 +1549,9 @@ export default function ResumeCreator() {
               ].map(tpl => (
                 <div 
                   key={tpl.id}
-                  onClick={() => setSelectedTemplate(tpl.id as 'modern' | 'tech' | 'executive')}
+                  onClick={() => applyTemplatePreset(tpl.id as 'modern' | 'tech' | 'executive')}
                   style={{
-                    padding: '12px',
+                    padding: '10px 12px',
                     border: '1px solid ' + (selectedTemplate === tpl.id ? 'var(--accent-color)' : 'var(--border-color)'),
                     borderRadius: '8px',
                     cursor: 'pointer',
@@ -1511,13 +1559,145 @@ export default function ResumeCreator() {
                     transition: 'all 0.2s'
                   }}
                 >
-                  <strong style={{ fontSize: '0.85rem', color: selectedTemplate === tpl.id ? 'var(--accent-color)' : 'var(--text-primary)', display: 'block' }}>
+                  <strong style={{ fontSize: '0.82rem', color: selectedTemplate === tpl.id ? 'var(--accent-color)' : 'var(--text-primary)', display: 'block' }}>
                     {tpl.name}
                   </strong>
-                  <p style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', margin: '4px 0 0 0', lineHeight: 1.4 }}>{tpl.desc}</p>
+                  <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', margin: '2px 0 0 0', lineHeight: 1.35 }}>{tpl.desc}</p>
                 </div>
               ))}
               
+              {/* Layout Customizer Controls */}
+              <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '12px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <h4 style={{ fontSize: '0.88rem', fontWeight: 700, margin: '0 0 4px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--accent-color)' }}>tune</span>
+                  Layout Customizer
+                </h4>
+
+                {/* Padding / Margins */}
+                <div>
+                  <label style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Page Margins (Padding)</label>
+                  <select 
+                    style={{ width: '100%', fontSize: '0.78rem', padding: '4px' }}
+                    value={customPadding}
+                    onChange={e => setCustomPadding(e.target.value)}
+                  >
+                    <option value="0.3in">Ultra Compact (0.3in)</option>
+                    <option value="0.4in">Compact (0.4in)</option>
+                    <option value="0.5in">Tight (0.5in)</option>
+                    <option value="0.6in">Medium (0.6in)</option>
+                    <option value="0.75in">Standard (0.75in)</option>
+                    <option value="1.0in">Wide (1.0in)</option>
+                  </select>
+                </div>
+
+                {/* Font Size */}
+                <div>
+                  <label style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Font Size</label>
+                  <select 
+                    style={{ width: '100%', fontSize: '0.78rem', padding: '4px' }}
+                    value={customFontSize}
+                    onChange={e => setCustomFontSize(e.target.value)}
+                  >
+                    <option value="8pt">Tiny (8pt)</option>
+                    <option value="8.5pt">Very Compact (8.5pt)</option>
+                    <option value="9pt">Compact (9pt)</option>
+                    <option value="9.5pt">Professional (9.5pt)</option>
+                    <option value="10pt">Standard (10pt)</option>
+                    <option value="11pt">Large (11pt)</option>
+                  </select>
+                </div>
+
+                {/* Line Height */}
+                <div>
+                  <label style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Line Spacing</label>
+                  <select 
+                    style={{ width: '100%', fontSize: '0.78rem', padding: '4px' }}
+                    value={customLineHeight}
+                    onChange={e => setCustomLineHeight(e.target.value)}
+                  >
+                    <option value="1.1">Extra Tight (1.1)</option>
+                    <option value="1.2">Compact (1.2)</option>
+                    <option value="1.25">Tight (1.25)</option>
+                    <option value="1.35">Normal (1.35)</option>
+                    <option value="1.5">Loose (1.5)</option>
+                  </select>
+                </div>
+
+                {/* Section Gap */}
+                <div>
+                  <label style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Section Spacing</label>
+                  <select 
+                    style={{ width: '100%', fontSize: '0.78rem', padding: '4px' }}
+                    value={customSectionSpacing}
+                    onChange={e => setCustomSectionSpacing(e.target.value)}
+                  >
+                    <option value="4px">Extra Dense (4px)</option>
+                    <option value="6px">Dense (6px)</option>
+                    <option value="8px">Compact (8px)</option>
+                    <option value="12px">Comfortable (12px)</option>
+                    <option value="18px">Spacious (18px)</option>
+                  </select>
+                </div>
+
+                {/* Heading style */}
+                <div>
+                  <label style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Heading style</label>
+                  <select 
+                    style={{ width: '100%', fontSize: '0.78rem', padding: '4px' }}
+                    value={customHeaderStyle}
+                    onChange={e => setCustomHeaderStyle(e.target.value as 'underline' | 'bordered' | 'minimal')}
+                  >
+                    <option value="underline">Bottom Underline</option>
+                    <option value="bordered">Top & Bottom Borders</option>
+                    <option value="minimal">Minimal (No Borders)</option>
+                  </select>
+                </div>
+
+                {/* Colors */}
+                <div>
+                  <label style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Primary Heading Color</label>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                    <input 
+                      type="color" 
+                      style={{ border: 'none', background: 'transparent', width: '30px', height: '30px', padding: 0, cursor: 'pointer' }}
+                      value={customPrimaryColor}
+                      onChange={e => setCustomPrimaryColor(e.target.value)}
+                    />
+                    <input 
+                      type="text" 
+                      style={{ flexGrow: 1, fontSize: '0.76rem', padding: '4px 6px', height: '30px' }}
+                      value={customPrimaryColor}
+                      onChange={e => setCustomPrimaryColor(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Typography selection */}
+                <div>
+                  <label style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Typography</label>
+                  <select 
+                    style={{ width: '100%', fontSize: '0.78rem', padding: '4px' }}
+                    value={customFontFamily}
+                    onChange={e => setCustomFontFamily(e.target.value as 'sans-serif' | 'serif' | 'monospace')}
+                  >
+                    <option value="sans-serif">Modern Sans-Serif (Manrope)</option>
+                    <option value="serif">Corporate Serif (Georgia)</option>
+                    <option value="monospace">Developer Mono (Courier)</option>
+                  </select>
+                </div>
+
+                {/* Custom CSS block */}
+                <div>
+                  <label style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Custom CSS Overrides</label>
+                  <textarea 
+                    style={{ width: '100%', height: '80px', fontSize: '0.7rem', fontFamily: 'monospace', resize: 'vertical' }}
+                    placeholder="e.g. .resume-header-name { letter-spacing: 2px; }"
+                    value={customCssOverrides}
+                    onChange={e => setCustomCssOverrides(e.target.value)}
+                  />
+                </div>
+              </div>
+
               <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '12px', marginTop: '8px' }}>
                 <h4 style={{ fontSize: '0.88rem', fontWeight: 700, margin: '0 0 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--accent-color)' }}>drafts</span>
@@ -1546,25 +1726,29 @@ export default function ResumeCreator() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div className="resume-paper-container" style={{ width: '100%', background: '#070c0a', padding: '24px 0', display: 'flex', justifyContent: 'center', borderRadius: '12px', border: '1px solid var(--border-color)', overflowX: 'auto' }}>
                 
+                {/* Dynamic CSS Overrides Tag */}
+                <style dangerouslySetInnerHTML={{ __html: customCssOverrides }} />
+
                 {/* Print Sheet Canvas */}
                 <div className={`resume-paper template-${selectedTemplate}`} style={{
                   width: '8.27in', // A4 Width
                   minHeight: '11.69in', // A4 Height
                   background: '#ffffff',
                   color: '#222222',
-                  padding: '0.75in 0.75in',
+                  padding: customPadding,
                   boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
                   boxSizing: 'border-box',
-                  fontFamily: selectedTemplate === 'executive' ? '"Georgia", "Times New Roman", serif' : '"Inter", "Arial", sans-serif',
-                  lineHeight: '1.35',
-                  textAlign: 'left'
+                  fontFamily: customFontFamily === 'serif' ? '"Georgia", "Times New Roman", serif' : customFontFamily === 'monospace' ? '"Courier New", Courier, monospace' : '"Manrope", "Inter", "Arial", sans-serif',
+                  lineHeight: customLineHeight,
+                  textAlign: 'left',
+                  fontSize: customFontSize
                 }}>
                   {/* Header segment */}
-                  <div style={{ borderBottom: selectedTemplate === 'tech' ? 'none' : '2px solid #1e3a8a', paddingBottom: '10px', marginBottom: '15px', textAlign: selectedTemplate === 'modern' ? 'left' : 'center' }}>
-                    <div style={{ fontSize: '22pt', fontWeight: 800, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  <div style={{ borderBottom: `2px solid ${customPrimaryColor}`, paddingBottom: '6px', marginBottom: customSectionSpacing, textAlign: selectedTemplate === 'modern' ? 'left' : 'center' }}>
+                    <div className="resume-header-name" style={{ fontSize: '18pt', fontWeight: 800, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       {fullName || 'Your Name'}
                     </div>
-                    <div style={{ fontSize: '9.5pt', color: '#64748b', marginTop: '5px', display: 'flex', gap: '12px', justifyContent: selectedTemplate === 'modern' ? 'flex-start' : 'center' }}>
+                    <div className="resume-header-contact" style={{ fontSize: '8.5pt', color: '#64748b', marginTop: '3px', display: 'flex', gap: '12px', justifyContent: selectedTemplate === 'modern' ? 'flex-start' : 'center' }}>
                       <span>{email}</span>
                       <span>•</span>
                       <span>{phone}</span>
@@ -1572,28 +1756,28 @@ export default function ResumeCreator() {
                   </div>
 
                   {/* Split body or traditional */}
-                  <div style={{ display: selectedTemplate === 'tech' ? 'grid' : 'block', gridTemplateColumns: '2.2in 1fr', gap: '0.4in' }}>
+                  <div style={{ display: selectedTemplate === 'tech' ? 'grid' : 'block', gridTemplateColumns: '1.8in 1fr', gap: '0.3in' }}>
                     
                     {/* Left side for tech template */}
                     {selectedTemplate === 'tech' && (
-                      <div style={{ borderRight: '1px solid #e2e8f0', paddingRight: '0.2in' }}>
-                        <div style={{ fontSize: '10.5pt', fontWeight: 700, color: '#1e3a8a', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                      <div style={{ borderRight: '1px solid #e2e8f0', paddingRight: '0.15in' }}>
+                        <div style={{ fontSize: '10pt', fontWeight: 700, color: customPrimaryColor, textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>
                           Skills
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '9pt', color: '#334155', marginBottom: '20px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', fontSize: '8pt', color: '#334155', marginBottom: '14px' }}>
                           {skills.map((s, idx) => (
                             <span key={idx} style={{ padding: '2px 0', borderBottom: '1px dashed #f1f5f9' }}>{s}</span>
                           ))}
                         </div>
                         
-                        <div style={{ fontSize: '10.5pt', fontWeight: 700, color: '#1e3a8a', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                        <div style={{ fontSize: '10pt', fontWeight: 700, color: customPrimaryColor, textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px' }}>
                           Education
                         </div>
                         {education.map((edu, idx) => (
-                          <div key={idx} style={{ fontSize: '8.5pt', marginBottom: '10px', color: '#334155' }}>
+                          <div key={idx} style={{ fontSize: '8pt', marginBottom: '8px', color: '#334155' }}>
                             <strong style={{ display: 'block', color: '#0f172a' }}>{edu.degree}</strong>
                             <span>{edu.school}</span>
-                            <span style={{ display: 'block', fontStyle: 'italic', color: '#64748b', marginTop: '2px' }}>{edu.duration}</span>
+                            <span style={{ display: 'block', fontStyle: 'italic', color: '#64748b', marginTop: '1px' }}>{edu.duration}</span>
                           </div>
                         ))}
                       </div>
@@ -1602,38 +1786,74 @@ export default function ResumeCreator() {
                     {/* Main side */}
                     <div>
                       {/* Summary */}
-                      <div style={{ marginBottom: '15px' }}>
-                        <div style={{ fontSize: '11pt', fontWeight: 700, color: '#1e3a8a', textTransform: 'uppercase', borderBottom: '1px solid #e2e8f0', paddingBottom: '3px', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                      <div style={{ marginBottom: customSectionSpacing }}>
+                        <div style={{ 
+                          fontSize: '10.5pt', 
+                          fontWeight: 700, 
+                          color: customPrimaryColor, 
+                          textTransform: 'uppercase', 
+                          borderBottom: customHeaderStyle === 'underline' ? '1px solid #e2e8f0' : 'none', 
+                          borderTop: customHeaderStyle === 'bordered' ? '1px solid #e2e8f0' : 'none',
+                          borderBottomColor: '#c0c0c0',
+                          borderTopColor: '#c0c0c0',
+                          paddingBottom: '2px', 
+                          marginBottom: '4px', 
+                          letterSpacing: '0.5px' 
+                        }}>
                           Profile Summary
                         </div>
-                        <p style={{ fontSize: '9.5pt', color: '#334155', margin: 0, textAlign: 'justify' }}>{tailoredData.tailored_summary}</p>
+                        <p style={{ fontSize: customFontSize, color: '#334155', margin: 0, textAlign: 'justify' }}>{tailoredData.tailored_summary}</p>
                       </div>
 
                       {/* Skills if not tech template */}
                       {selectedTemplate !== 'tech' && skills.length > 0 && (
-                        <div style={{ marginBottom: '15px' }}>
-                          <div style={{ fontSize: '11pt', fontWeight: 700, color: '#1e3a8a', textTransform: 'uppercase', borderBottom: '1px solid #e2e8f0', paddingBottom: '3px', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                        <div style={{ marginBottom: customSectionSpacing }}>
+                          <div style={{ 
+                            fontSize: '10.5pt', 
+                            fontWeight: 700, 
+                            color: customPrimaryColor, 
+                            textTransform: 'uppercase', 
+                            borderBottom: customHeaderStyle === 'underline' ? '1px solid #e2e8f0' : 'none', 
+                            borderTop: customHeaderStyle === 'bordered' ? '1px solid #e2e8f0' : 'none',
+                            borderBottomColor: '#c0c0c0',
+                            borderTopColor: '#c0c0c0',
+                            paddingBottom: '2px', 
+                            marginBottom: '4px', 
+                            letterSpacing: '0.5px' 
+                          }}>
                             Technical Skills
                           </div>
-                          <p style={{ fontSize: '9.5pt', color: '#334155', margin: 0 }}>{skills.join(', ')}</p>
+                          <p style={{ fontSize: customFontSize, color: '#334155', margin: 0 }}>{skills.join(', ')}</p>
                         </div>
                       )}
 
                       {/* Work Experience */}
                       {tailoredExperience.length > 0 && (
-                        <div style={{ marginBottom: '15px' }}>
-                          <div style={{ fontSize: '11pt', fontWeight: 700, color: '#1e3a8a', textTransform: 'uppercase', borderBottom: '1px solid #e2e8f0', paddingBottom: '3px', marginBottom: '8px', letterSpacing: '0.5px' }}>
+                        <div style={{ marginBottom: customSectionSpacing }}>
+                          <div style={{ 
+                            fontSize: '10.5pt', 
+                            fontWeight: 700, 
+                            color: customPrimaryColor, 
+                            textTransform: 'uppercase', 
+                            borderBottom: customHeaderStyle === 'underline' ? '1px solid #e2e8f0' : 'none', 
+                            borderTop: customHeaderStyle === 'bordered' ? '1px solid #e2e8f0' : 'none',
+                            borderBottomColor: '#c0c0c0',
+                            borderTopColor: '#c0c0c0',
+                            paddingBottom: '2px', 
+                            marginBottom: '6px', 
+                            letterSpacing: '0.5px' 
+                          }}>
                             Professional Experience
                           </div>
                           {tailoredExperience.map((exp, idx) => (
-                            <div key={idx} style={{ marginBottom: '12px' }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9.5pt', fontWeight: 700, color: '#0f172a' }}>
+                            <div key={idx} style={{ marginBottom: '6px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9pt', fontWeight: 700, color: '#0f172a' }}>
                                 <span>{exp.role} <span style={{ fontWeight: 400, color: '#475569' }}>at {exp.company}</span></span>
                                 <span style={{ fontWeight: 400, fontStyle: 'italic', color: '#64748b' }}>{exp.duration}</span>
                               </div>
-                              <ul style={{ margin: '4px 0 0 0', paddingLeft: '18px', fontSize: '9pt', color: '#334155' }}>
+                              <ul style={{ margin: '2px 0 0 0', paddingLeft: '14px', fontSize: '8.5pt', color: '#334155' }}>
                                 {exp.bullets?.split('\n').filter(Boolean).map((bullet: string, bidx: number) => (
-                                  <li key={bidx} style={{ marginBottom: '3px', textAlign: 'justify' }}>{bullet.replace(/^[-\*\s•]+/, '')}</li>
+                                  <li key={bidx} style={{ marginBottom: '2px', textAlign: 'justify' }}>{bullet.replace(/^[-\*\s•]+/, '')}</li>
                                 ))}
                               </ul>
                             </div>
@@ -1643,14 +1863,26 @@ export default function ResumeCreator() {
 
                       {/* Projects */}
                       {projectsList.length > 0 && (
-                        <div style={{ marginBottom: '15px' }}>
-                          <div style={{ fontSize: '11pt', fontWeight: 700, color: '#1e3a8a', textTransform: 'uppercase', borderBottom: '1px solid #e2e8f0', paddingBottom: '3px', marginBottom: '8px', letterSpacing: '0.5px' }}>
+                        <div style={{ marginBottom: customSectionSpacing }}>
+                          <div style={{ 
+                            fontSize: '10.5pt', 
+                            fontWeight: 700, 
+                            color: customPrimaryColor, 
+                            textTransform: 'uppercase', 
+                            borderBottom: customHeaderStyle === 'underline' ? '1px solid #e2e8f0' : 'none', 
+                            borderTop: customHeaderStyle === 'bordered' ? '1px solid #e2e8f0' : 'none',
+                            borderBottomColor: '#c0c0c0',
+                            borderTopColor: '#c0c0c0',
+                            paddingBottom: '2px', 
+                            marginBottom: '6px', 
+                            letterSpacing: '0.5px' 
+                          }}>
                             Key Projects
                           </div>
                           {projectsList.map((p, idx) => (
-                            <div key={idx} style={{ marginBottom: '8px', fontSize: '9.5pt' }}>
+                            <div key={idx} style={{ marginBottom: '4px', fontSize: '9pt' }}>
                               <strong style={{ color: '#0f172a', display: 'block' }}>{p.name}</strong>
-                              <p style={{ margin: '3px 0 0 0', color: '#334155', fontSize: '9pt', textAlign: 'justify' }}>{p.description}</p>
+                              <p style={{ margin: '2px 0 0 0', color: '#334155', fontSize: '8.5pt', textAlign: 'justify' }}>{p.description}</p>
                             </div>
                           ))}
                         </div>
@@ -1659,11 +1891,23 @@ export default function ResumeCreator() {
                       {/* Education if not tech template */}
                       {selectedTemplate !== 'tech' && education.length > 0 && (
                         <div>
-                          <div style={{ fontSize: '11pt', fontWeight: 700, color: '#1e3a8a', textTransform: 'uppercase', borderBottom: '1px solid #e2e8f0', paddingBottom: '3px', marginBottom: '8px', letterSpacing: '0.5px' }}>
+                          <div style={{ 
+                            fontSize: '10.5pt', 
+                            fontWeight: 700, 
+                            color: customPrimaryColor, 
+                            textTransform: 'uppercase', 
+                            borderBottom: customHeaderStyle === 'underline' ? '1px solid #e2e8f0' : 'none', 
+                            borderTop: customHeaderStyle === 'bordered' ? '1px solid #e2e8f0' : 'none',
+                            borderBottomColor: '#c0c0c0',
+                            borderTopColor: '#c0c0c0',
+                            paddingBottom: '2px', 
+                            marginBottom: '6px', 
+                            letterSpacing: '0.5px' 
+                          }}>
                             Education
                           </div>
                           {education.map((edu, idx) => (
-                            <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9.5pt', color: '#334155', marginBottom: '4px' }}>
+                            <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9pt', color: '#334155', marginBottom: '2px' }}>
                               <span><strong>{edu.degree}</strong> – {edu.school}</span>
                               <span style={{ fontStyle: 'italic', color: '#64748b' }}>{edu.duration}</span>
                             </div>

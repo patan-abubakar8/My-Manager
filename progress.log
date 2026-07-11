@@ -122,3 +122,11 @@
 - FEATURE: Built veteran mock Interview Coach section showcasing domain topic accordions (Aptitude, Coding, SQL, System Design, Behavioral) with expected answers and framework response tips.
 - CSS: Appended Section 13 print layouts, template fonts overrides, page breaks, and accordion drawers animations to index.css.
 - VERIFICATION: TypeScript production build compiled cleanly (36 modules, 0 errors) and Python backend source modules tested clean.
+
+[2026-07-11T21:20:00+05:30]
+- FEATURE: Added an interactive Resume Style Customizer Panel in Step 4 sidebar of Resume Studio.
+- FEATURE: Integrated granular design controls for margins, font sizes, line heights, section spacing, heading underline/bordered styles, custom primary accent colors, and typography choices.
+- FEATURE: Added a raw Custom CSS overrides text area permitting Sonu to copy and paste styling overrides directly from templates online, rendering them live on the canvas and in prints.
+- REFACTOR: Modified backend `/export-docx` and frontend trigger to sync `style_config` parameters, compiling download exports that replicate custom colors and layouts in MS Word files.
+- FIX: Refined `@media print` rules in `index.css` to remove hardcoded padding/color important flags, allowing customizer options to carry over cleanly to printed PDFs.
+- VERIFICATION: Front-end production build completed successfully (36 modules, 0 errors) and Python routes compiled clean.
