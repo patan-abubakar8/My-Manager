@@ -364,11 +364,11 @@ export default function Applications() {
                       <td>{job.applied_date || 'N/A'}</td>
                       <td>
                         <div style={{ display: 'flex', gap: '8px' }}>
-                          <button className="collapse-btn" onClick={() => openEditModal(job)}>
+                          <button className="btn-action-icon" onClick={() => openEditModal(job)}>
                             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>edit</span>
                           </button>
-                          <button className="collapse-btn" onClick={() => handleDelete(job.id)}>
-                            <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--danger-color)' }}>delete</span>
+                          <button className="btn-delete-icon" onClick={() => handleDelete(job.id)}>
+                            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>delete</span>
                           </button>
                         </div>
                       </td>

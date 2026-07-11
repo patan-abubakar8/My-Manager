@@ -177,11 +177,11 @@ export default function Ideas({ onDeepDive }: IdeasProps) {
                   Deep-Dive Discussion
                 </button>
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button className="collapse-btn" onClick={() => openEditModal(idea)}>
+                  <button className="btn-action-icon" onClick={() => openEditModal(idea)}>
                     <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>edit</span>
                   </button>
-                  <button className="collapse-btn" onClick={() => handleDelete(idea.id)}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--danger-color)' }}>delete</span>
+                  <button className="btn-delete-icon" onClick={() => handleDelete(idea.id)}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>delete</span>
                   </button>
                 </div>
               </div>
