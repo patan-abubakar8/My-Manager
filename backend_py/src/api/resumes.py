@@ -570,6 +570,21 @@ def export_resume_docx(body: Dict):
     skills = body.get("skills", [])
     projects = body.get("projects", [])
     
+    style_config = body.get("style_config", {})
+    padding = style_config.get("padding", "0.4in")
+    font_size = style_config.get("fontSize", "9.5pt")
+    line_height = style_config.get("lineHeight", "1.25")
+    section_spacing = style_config.get("sectionSpacing", "6px")
+    primary_color = style_config.get("primaryColor", "#1e3a8a")
+    font_family = style_config.get("fontFamily", "sans-serif")
+    header_style = style_config.get("headerStyle", "underline")
+    
+    ms_font = "Arial"
+    if font_family == "serif":
+        ms_font = "Georgia"
+    elif font_family == "monospace":
+        ms_font = "Courier New"
+        
     html_content = f"""
     <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
     <head>
@@ -586,25 +601,25 @@ def export_resume_docx(body: Dict):
         <style>
             @page {{
                 size: 8.5in 11in;
-                margin: 1.0in 1.0in 1.0in 1.0in;
+                margin: {padding} {padding} {padding} {padding};
                 mso-header-margin: .5in;
                 mso-footer-margin: .5in;
                 mso-paper-source: 0;
             }}
             body {{
-                font-family: "Calibri", "Arial", sans-serif;
-                font-size: 11.5pt;
-                line-height: 1.3;
+                font-family: "{ms_font}", "Calibri", sans-serif;
+                font-size: {font_size};
+                line-height: {line_height};
                 color: #222222;
             }}
             .header {{
                 text-align: center;
-                margin-bottom: 25px;
-                border-bottom: 2px solid #1f3864;
-                padding-bottom: 10px;
+                margin-bottom: {section_spacing};
+                border-bottom: 2px solid {primary_color};
+                padding-bottom: 6px;
             }}
             .name {{
-                font-size: 22pt;
+                font-size: 18pt;
                 font-weight: bold;
                 color: #111111;
                 margin: 0;
@@ -612,32 +627,33 @@ def export_resume_docx(body: Dict):
                 letter-spacing: 1px;
             }}
             .contact {{
-                font-size: 10pt;
+                font-size: 8.5pt;
                 color: #555555;
-                margin-top: 5px;
+                margin-top: 3px;
             }}
             .section-title {{
-                font-size: 13pt;
+                font-size: 10.5pt;
                 font-weight: bold;
-                color: #1f3864;
-                border-bottom: 1px solid #c0c0c0;
-                margin-top: 22px;
-                margin-bottom: 10px;
+                color: {primary_color};
+                border-bottom: {"1px solid #c0c0c0" if header_style == "underline" else "none"};
+                border-top: {"1px solid #c0c0c0" if header_style == "bordered" else "none"};
+                margin-top: 14px;
+                margin-bottom: {section_spacing};
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
             }}
             .summary {{
-                margin-bottom: 15px;
+                margin-bottom: {section_spacing};
                 text-align: justify;
-                font-size: 11pt;
+                font-size: {font_size};
             }}
             .item-header {{
-                margin-top: 12px;
-                margin-bottom: 4px;
+                margin-top: 8px;
+                margin-bottom: 2px;
                 font-weight: bold;
             }}
             .item-title {{
-                font-size: 11.5pt;
+                font-size: {font_size};
                 color: #111111;
             }}
             .item-company {{
@@ -651,14 +667,14 @@ def export_resume_docx(body: Dict):
                 float: right;
             }}
             .bullets {{
-                margin-top: 5px;
-                margin-bottom: 12px;
+                margin-top: 2px;
+                margin-bottom: 8px;
                 padding-left: 20px;
             }}
             .bullet-item {{
-                margin-bottom: 4px;
+                margin-bottom: 2px;
                 text-align: justify;
-                font-size: 11pt;
+                font-size: {font_size};
             }}
         </style>
     </head>
@@ -676,7 +692,7 @@ def export_resume_docx(body: Dict):
         skills_str = ", ".join(skills)
         html_content += f"""
         <div class="section-title">Technical Skills</div>
-        <div style="margin-bottom: 15px; font-size: 11pt;">{skills_str}</div>
+        <div style="margin-bottom: {section_spacing}; font-size: {font_size};">{skills_str}</div>
         """
         
     if experience:
@@ -711,7 +727,7 @@ def export_resume_docx(body: Dict):
             <div class="item-header">
                 <span class="item-title">{name}</span>
             </div>
-            <div style="margin-bottom: 12px; font-size: 11pt; text-align: justify;">{desc}</div>
+            <div style="margin-bottom: {section_spacing}; font-size: {font_size}; text-align: justify;">{desc}</div>
             """
             
     if education:

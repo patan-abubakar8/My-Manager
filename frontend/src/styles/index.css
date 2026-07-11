@@ -2326,10 +2326,8 @@ body.light-theme .copilot-input-wrapper:focus-within {
     box-shadow: none !important;
     border: none !important;
     margin: 0 !important;
-    padding: 0.5in !important;
     width: 100% !important;
     min-height: auto !important;
-    color: #000000 !important;
     background: #ffffff !important;
   }
 }
