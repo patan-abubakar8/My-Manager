@@ -9,6 +9,7 @@ from backend_py.src.domain.models import UserMemory, UserMemorySchema
 from backend_py.src.config.config import NVIDIA_NIM_API_KEY
 from backend_py.src.application.ai_helper import extract_and_save_memories
 from backend_py.src.api.settings import get_active_model_name, get_active_image_model_name, get_active_video_model_name
+from backend_py.src.application.skill_registry import allowed_skills, load_skill_instructions, resolve_skill
 import time
 
 router = APIRouter(prefix="/api/v1/ai", tags=["ai"])
@@ -46,8 +47,34 @@ def detect_intent(text: str, page: Optional[str] = None) -> Optional[str]:
 
 # ─── System Prompt Builders ───────────────────────────────────────────────────
 
-def build_system_prompt(memory_context: str, intent: Optional[str], page: Optional[str]) -> str:
+def build_system_prompt(memory_context: str, intent: Optional[str], page: Optional[str], skill: Optional[dict] = None, available_skills: Optional[list] = None) -> str:
     """Build appropriate system prompt based on current page and detected intent."""
+    action_schema_help = """
+Supported action schemas:
+- CREATE_PROJECT: {"type":"CREATE_PROJECT","payload":{"name":"string","description":"string","tech_stack":"string","github_url":"string"}}
+- CREATE_REQUIRED_PROJECT: {"type":"CREATE_REQUIRED_PROJECT","payload":{"name":"string","description":"string","tech_stack":"string","recreate_steps":"string"}}
+- CREATE_IDEA: {"type":"CREATE_IDEA","payload":{"title":"string","description":"string","category":"Tech","status":"Idea"}}
+- CREATE_JOB: {"type":"CREATE_JOB","payload":{"company":"string","role":"string","status":"APPLIED","notes":"string"}}
+- ADD_TASK: {"type":"ADD_TASK","payload":{"project_id":1,"title":"string","description":"string","status":"TODO","priority":"MEDIUM"}}
+- ADD_TASKS: {"type":"ADD_TASKS","payload":{"tasks":[{"project_id":1,"title":"string","description":"string","status":"TODO","priority":"MEDIUM"}]}}
+Append exactly one ACTION_JSON line only when the user clearly asks to create or add something."""
+    skill_context = ""
+    if skill:
+        catalogue = ", ".join(item["label"] for item in (available_skills or []))
+        skill_context = f"\n\nActive Skill: {skill['label']}\n{load_skill_instructions(skill)}\nAvailable skills: {catalogue}\nOnly propose these actions: {', '.join(skill.get('allowed_actions', []))}.\n{action_schema_help}"
+        memory_context = f"{memory_context}{skill_context}"
+    elif available_skills:
+        metadata = json.dumps([
+            {
+                "id": item["id"],
+                "label": item["label"],
+                "description": item["description"],
+                "allowed_actions": item.get("allowed_actions", [])
+            }
+            for item in available_skills
+        ])
+        skill_context = f"\n\nAvailable skill metadata: {metadata}\nChoose the most relevant skill internally for this task. Only propose actions listed in the available skill metadata.\n{action_schema_help}"
+        memory_context = f"{memory_context}{skill_context}"
 
     # ── Ideas Page: Team Discussion Mode ──────────────────────────────────────
     if page == "ideas":
@@ -130,7 +157,7 @@ Be concise, structured, and professional. Use markdown where helpful.{action_ins
 
 # ─── NVIDIA NIM Streaming ─────────────────────────────────────────────────────
 
-def stream_nim_response(messages: list, model: str):
+def stream_nim_response(messages: list, model: str, allowed_action_types: Optional[list[str]] = None):
     """Generator that yields SSE lines from active AI provider streaming API."""
     from backend_py.src.infrastructure.database import SessionLocal
     from backend_py.src.api.settings import get_active_ai_credentials
@@ -141,6 +168,7 @@ def stream_nim_response(messages: list, model: str):
         api_key = creds["api_key"]
         base_url = creds["base_url"]
         target_model = model if model else creds["model"]
+        provider = creds.get("provider", "openai")
         
         # Check for Anthropic streaming
         if provider == "anthropic":
@@ -233,7 +261,8 @@ def stream_nim_response(messages: list, model: str):
         try:
             action_raw = combined.split("ACTION_JSON:", 1)[1].strip().split("\n")[0]
             action_obj = json.loads(action_raw)
-            yield f"data: {json.dumps({'type': 'action', 'payload': action_obj})}\n\n"
+            if not allowed_action_types or action_obj.get("type") in allowed_action_types:
+                yield f"data: {json.dumps({'type': 'action', 'payload': action_obj})}\n\n"
         except Exception:
             pass
 
@@ -243,12 +272,19 @@ def stream_nim_response(messages: list, model: str):
 
 # ─── Chat Endpoints ───────────────────────────────────────────────────────────
 
+@router.get("/skills")
+def get_skills(page: str = "dashboard", mode: str = "text"):
+    """Return only the skills valid for the current workspace and model mode."""
+    return allowed_skills(page.strip().lower(), mode.strip().lower())
+
+
 @router.post("/chat/stream")
 def ai_chat_stream(request: Dict, db: Session = Depends(get_db)):
     user_msg = request.get("message", "").strip()
     page = request.get("page", "").strip().lower()  # page context
     idea_context = request.get("ideaContext", "").strip()  # idea details for deep-dive
     mode = request.get("mode", "text").strip().lower()  # text, image, video mode
+    requested_skill = request.get("skill", "auto").strip().lower()
 
     if not user_msg:
         raise HTTPException(status_code=400, detail="Message cannot be empty")
@@ -263,8 +299,11 @@ def ai_chat_stream(request: Dict, db: Session = Depends(get_db)):
     if idea_context:
         user_msg = f"[Discussing Idea: {idea_context}]\n\n{user_msg}"
 
+    selected_skill, available = resolve_skill(page, mode, requested_skill)
+    if requested_skill != "auto" and not selected_skill:
+        raise HTTPException(status_code=400, detail="Selected skill is not available for this page or model mode")
     intent = detect_intent(user_msg, page)
-    system_prompt = build_system_prompt(memory_context, intent, page)
+    system_prompt = build_system_prompt(memory_context, intent, page, selected_skill, available)
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_msg}
@@ -328,7 +367,12 @@ def ai_chat_stream(request: Dict, db: Session = Depends(get_db)):
         else:
             # Standard Text Mode stream
             full_parts = []
-            for chunk in stream_nim_response(messages, active_model):
+            allowed_actions = selected_skill.get("allowed_actions", []) if selected_skill else sorted({
+                action
+                for skill in available
+                for action in skill.get("allowed_actions", [])
+            })
+            for chunk in stream_nim_response(messages, active_model, allowed_actions):
                 yield chunk
                 if '"type": "token"' in chunk or '"type":"token"' in chunk:
                     try:
