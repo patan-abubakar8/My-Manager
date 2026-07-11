@@ -9,7 +9,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from sqlalchemy import text, inspect as sa_inspect
-from backend_py.database import engine
+from backend_py.src.infrastructure.database import engine
 
 
 MIGRATIONS = [
@@ -18,6 +18,7 @@ MIGRATIONS = [
     ("projects",         "features_json",   "TEXT"),
     ("projects",         "is_own_project",  "BOOLEAN DEFAULT TRUE"),
     ("projects",         "recreate_steps",  "TEXT"),
+    ("projects",         "project_kind",    "VARCHAR DEFAULT 'OWN'"),
     ("tailored_resumes", "ats_score",       "INTEGER"),
     ("tailored_resumes", "ats_feedback",    "TEXT"),
     ("tailored_resumes", "ats_keywords",    "TEXT"),

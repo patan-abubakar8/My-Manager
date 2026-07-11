@@ -43,6 +43,7 @@ class Project(Base, BaseAuditEntity):
     features_json = Column(Text, nullable=True, default="[]")
     is_own_project = Column(Boolean, default=True, nullable=False)
     recreate_steps = Column(Text, nullable=True)
+    project_kind = Column(String, nullable=False, default="OWN")  # OWN / LEARNING / REQUIRED
 
 class Task(Base, BaseAuditEntity):
     __tablename__ = "tasks"
@@ -80,6 +81,21 @@ class TailoredResume(Base, BaseAuditEntity):
     ats_score = Column(Integer, nullable=True)
     ats_feedback = Column(Text, nullable=True)
     ats_keywords = Column(Text, nullable=True)
+class ResumeHistory(Base, BaseAuditEntity):
+    __tablename__ = "resume_history"
+    
+    id = Column(BigInteger, primary_key=True, index=True)
+    filename = Column(String, nullable=True)
+    full_name = Column(String, nullable=True)
+    email = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
+    summary = Column(Text, nullable=True)
+    experience_json = Column(Text, nullable=True)
+    education_json = Column(Text, nullable=True)
+    skills_json = Column(Text, nullable=True)
+    projects_json = Column(Text, nullable=True)
+    raw_text = Column(Text, nullable=True)
+    target_role = Column(String, nullable=True)
 
 class SystemSetting(Base, BaseAuditEntity):
     __tablename__ = "system_settings"
@@ -129,6 +145,7 @@ class ProjectSchema(BaseModel):
     features_json: Optional[str] = "[]"
     is_own_project: Optional[bool] = True
     recreate_steps: Optional[str] = None
+    project_kind: Optional[str] = None
     
     class Config:
         from_attributes = True
@@ -218,3 +235,20 @@ class GithubImportRequest(BaseModel):
     github_url: str
     is_own_project: bool = True
 
+class ResumeHistorySchema(BaseModel):
+    id: Optional[int] = None
+    filename: Optional[str] = None
+    full_name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    summary: Optional[str] = None
+    experience_json: Optional[str] = None
+    education_json: Optional[str] = None
+    skills_json: Optional[str] = None
+    projects_json: Optional[str] = None
+    raw_text: Optional[str] = None
+    target_role: Optional[str] = None
+    created_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True

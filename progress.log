@@ -65,3 +65,60 @@
 
 [2026-07-10T23:45:00+05:30]
 - UI/UX: Executed global layout and aesthetic polish. Centered sidebar menu icons by resetting default browser ul padding-left. Overhauled raw radio-button selector in Copilot with premium capsule tabs. Styled Kanban columns priority tags and circle counts. Split text stack strings into individual rounded capsule tags on Dashboard and Project pages. Standardized sub-tabs in Resume Creator and Job Application tracker.
+
+[2026-07-11T00:52:00+05:30]
+- FEATURE: Split the monolithic Projects page into two separate pages.
+- PAGE ADDED: Projects Gallery (`/projects`) - Fully rewritten Projects.tsx as a responsive card grid. Each project card displays project name, type badge (Own/Learning), tech stack chips, To Do / In Progress / Done task counts, a progress bar, GitHub connection status indicator, and last-updated timestamp. Task counts are fetched in parallel with Promise.all. Delete button revealed on hover with stopPropagation.
+- PAGE ADDED: Project Detail Workspace (`/projects/:id`) - New ProjectDetail.tsx. Features a compact sticky top bar with back navigation, project name, tech chips, and action buttons (Sync GitHub, AI Tasks, Add Task). A collapsible info accordion hides project description, GitHub URL/summary, recreation steps, and wishlist features by default, keeping the workspace uncluttered. Full-width Kanban board is the dominant element with colored left-border column accents (neutral/warning/success) and compact pill-style move buttons.
+- ROUTING: Added `/projects/:id` route in App.tsx mapped to ProjectDetail component. Utilizes `useParams` for project ID and `useNavigate` for back navigation.
+- CSS: Added Section 11 to index.css with 20+ new design classes: project-card-grid, project-card (hover lift), project-card-delete (hover reveal), tech-chip, project-card-stats, stat-pill-label/value, project-card-progress-bar/fill, github-status/dot, detail-top-bar, detail-back-btn, detail-project-name, detail-actions, detail-info-panel, detail-info-toggle, detail-info-body, kanban-col-todo/inprogress/done accent borders, kanban-move-btn.
+- VERIFICATION: TypeScript build passed clean. 36 modules, 0 errors, built in 2.08s.
+
+[2026-07-11T11:33:20+05:30]
+- DESIGN SYSTEM: Replaced the global Plus Jakarta Sans font import and base font family with Manrope, including weights 300–800.
+- UI/UX: Redesigned the Dashboard (`/`) as a responsive CRM-style command center.
+  - Added a focused workspace header with quick actions for creating projects and capturing ideas.
+  - Reworked top metrics into actionable project, open-task, career-pipeline, and idea-inbox summary cards.
+  - Added project-health rows with calculated task-completion progress and open-task counts.
+  - Added a career application pipeline, priority-sorted focus queue, and compact idea inbox.
+  - Added empty states and responsive layouts for tablet and mobile viewports.
+- CSS: Added Section 12 in `frontend/src/styles/index.css` for the CRM dashboard components and responsive breakpoints.
+- VERIFICATION: TypeScript/Vite production build passed cleanly (36 modules, 0 errors).
+
+[2026-07-11T12:18:00+05:30]
+- FEATURE: Added a Brain-backed Copilot skill registry under `Brain/skills`, including Resume ATS Creator, Project Guider, Developer Mentor, Career Coach, and Idea Strategist metadata/instruction files.
+- FEATURE: Added `/api/v1/ai/skills` and wired Copilot to show a page-aware Skill dropdown separate from text/image/video model mode.
+- FEATURE: Centralized AI action handling for `CREATE_PROJECT`, `CREATE_REQUIRED_PROJECT`, `CREATE_JOB`, `CREATE_IDEA`, `ADD_TASK`, and `ADD_TASKS`, with Promise-based confirmation before database writes.
+- FEATURE: Added Resume JD project matching via `POST /api/v1/resumes/project-match/{jobId}` to map existing projects to a JD and suggest honest Required/Learnable projects for skill gaps.
+- FEATURE: Added batch task creation endpoint `POST /api/v1/tasks/batch` so required project starter tasks can be created after project confirmation.
+- DATABASE: Added `projects.project_kind` (`OWN`, `LEARNING`, `REQUIRED`) and wired startup migrations to add missing legacy columns safely.
+- UI/UX: Reworked Resume ATS missing-keyword panel to show existing project evidence and required project cards with "Add Required Project" confirmation.
+- UI/UX: Restructured Projects page into a cleaner project hub with Portfolio, Required/Learnable, and Learning Reference sections plus summary counters.
+- CSS: Added Section 13 in `frontend/src/styles/index.css` for Copilot skill controls, Resume ATS project matching, and project hub structure.
+- FIX: Resolved Copilot streaming `provider` reference bug and restricted streamed `ACTION_JSON` output to page/skill-allowed action types.
+- VERIFICATION: Frontend TypeScript/Vite production build passed cleanly. Backend Python modules compiled successfully with bundled Python.
+
+[2026-07-11T13:28:00+05:30]
+- REFACTOR: Redesigned the AI Copilot chat drawer to use a glassmorphic sidebar drawer layout with scrollbars and theme-appropriate slate/indigo message bubbles.
+- UI/UX: Added message sender avatars and identifiers ("Sonu" / "Copilot").
+- UI/UX: Designed empty-state psychology quick-start suggestions.
+- UI/UX: Collapsed the heavy skill and model config elements (Skill select, active Text/Image/Video models) into a popup configuration flyout popover triggered from a `tune` settings toggle button inside the message input wrapper. Added click-outside handler to dismiss settings popover.
+- FIX: Aligned Copilot title and close button cleanly using space-between flexbox in `.copilot-header`, and centered the online status pulse dot.
+- VERIFICATION: TypeScript compiler build passed cleanly (36 modules, 0 errors).
+
+[2026-07-11T13:32:00+05:30]
+- REFACTOR: Overhauled all 5 AI Copilot skill prompt instruction files (Resume ATS Creator, Project Guider, Developer Mentor, Career Coach, and Idea Strategist) inside `Brain/skills/` to define highly sophisticated, role-specific guidelines, methodologies (XYZ formula, STAR method, deconstruct-to-MVP, VC 5-lenses analysis), clean-coding standards, and action triggering rules.
+
+[2026-07-11T13:37:00+05:30]
+- FIX: Resolved `500 Internal Server Error` in `POST /api/v1/resumes/tailored/{jobId}`. Changed the structured output schema `tailor_schema` to request `tailoredExperience` as a flat JSON array instead of a double-nested JSON string (which caused frequent LLM escape character errors and JSON decoding failures). The array is now cleanly serialized to string via `json.dumps` in python before DB insertion. Tested successfully with ATS score output.
+
+[2026-07-11T14:10:00+05:30]
+- FEATURE OVERHAUL: Redesigned the entire AI Resume Studio tab layout with a 5-step guided wizard layout (Import & Editor, Target Job, Analysis Report, Resume Templates, and Interview Coach).
+- FEATURE: Added split-screen Master Profile editor featuring drag/drop upload targets supporting PDF and DOCX, raw text input pastures, and clear/scratch manual start hooks.
+- FEATURE: Added an Import History drawer modal fetching past parsed versions with load hooks to restore snapshots.
+- FEATURE: Upgraded JD input step with sub-tabs for URLs scraping (via regex cleanup endpoints), raw text box pasting, and selecting from tracked active job applications.
+- FEATURE: Re-engineered ATS check panel to render matching/missing keywords, skill-aligned learning projects suggestions (with Kanban board addition triggers), and a fully editable audit feedback list.
+- FEATURE: Added selection cards for A4-friendly templates (Modern Minimalist, Technical Developer, Executive Class) styled on live-render paper previews, with print-media stylesheet integrations and DOCX file download streaming.
+- FEATURE: Built veteran mock Interview Coach section showcasing domain topic accordions (Aptitude, Coding, SQL, System Design, Behavioral) with expected answers and framework response tips.
+- CSS: Appended Section 13 print layouts, template fonts overrides, page breaks, and accordion drawers animations to index.css.
+- VERIFICATION: TypeScript production build compiled cleanly (36 modules, 0 errors) and Python backend source modules tested clean.
