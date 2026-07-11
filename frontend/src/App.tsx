@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
+import ProjectDetail from './pages/ProjectDetail';
 import Applications from './pages/Applications';
 import ResumeCreator from './pages/ResumeCreator';
 import Ideas from './pages/Ideas';
@@ -66,6 +67,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/resumes" element={<ResumeCreator />} />
           <Route path="/ideas" element={<Ideas onDeepDive={(idea) => {

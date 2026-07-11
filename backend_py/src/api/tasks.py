@@ -1,10 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+from pydantic import BaseModel
 from backend_py.src.infrastructure.database import get_db
 from backend_py.src.domain.models import Task, TaskSchema
 
 router = APIRouter(prefix="/api/v1/tasks", tags=["tasks"])
+
+class TaskBatchRequest(BaseModel):
+    tasks: List[TaskSchema]
 
 @router.get("/project/{projectId}", response_model=List[TaskSchema])
 def get_tasks_by_project(projectId: int, db: Session = Depends(get_db)):
@@ -31,6 +35,19 @@ def create_task(task_data: TaskSchema, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(task)
     return task
+
+@router.post("/batch", response_model=List[TaskSchema], status_code=status.HTTP_201_CREATED)
+def create_tasks_batch(body: TaskBatchRequest, db: Session = Depends(get_db)):
+    if not body.tasks:
+        raise HTTPException(status_code=400, detail="At least one task is required")
+    created = [Task(project_id=item.project_id, title=item.title, description=item.description,
+                    status=item.status, priority=item.priority, due_date=item.due_date)
+               for item in body.tasks]
+    db.add_all(created)
+    db.commit()
+    for task in created:
+        db.refresh(task)
+    return created
 
 @router.put("/{id}", response_model=TaskSchema)
 def update_task(id: int, task_data: TaskSchema, db: Session = Depends(get_db)):

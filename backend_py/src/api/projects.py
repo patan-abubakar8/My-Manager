@@ -41,7 +41,8 @@ def create_project(project_data: ProjectSchema, db: Session = Depends(get_db)):
         github_summary=project_data.github_summary,
         features_json=project_data.features_json or "[]",
         is_own_project=project_data.is_own_project if project_data.is_own_project is not None else True,
-        recreate_steps=project_data.recreate_steps
+        recreate_steps=project_data.recreate_steps,
+        project_kind=project_data.project_kind or ("OWN" if project_data.is_own_project else "LEARNING")
     )
     db.add(project)
     db.commit()
@@ -66,6 +67,8 @@ def update_project(id: int, project_data: ProjectSchema, db: Session = Depends(g
         project.is_own_project = project_data.is_own_project
     if project_data.recreate_steps is not None:
         project.recreate_steps = project_data.recreate_steps
+    if project_data.project_kind is not None:
+        project.project_kind = project_data.project_kind
     db.commit()
     db.refresh(project)
     return project
@@ -232,7 +235,8 @@ Generate:
         github_summary=github_summary,
         recreate_steps=recreate_steps,
         is_own_project=body.is_own_project,
-        features_json="[]"
+        features_json="[]",
+        project_kind="OWN" if body.is_own_project else "LEARNING"
     )
     db.add(project)
     db.commit()
